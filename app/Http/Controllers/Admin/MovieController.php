@@ -14,7 +14,9 @@ class MovieController extends Controller
      */
     public function index()
     {
+        $movies = Movie::all();
         
+        return view("admin.movies.index", compact("movies"));
     }
 
     /**
@@ -22,7 +24,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        return view("admin.movies.create");
     }
 
     /**
@@ -30,7 +32,14 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-        //
+        $validated_data = $request->validated();
+
+        $newMovie = new Movie();
+        $newMovie->fill($validated_data);
+        $newMovie->save();
+
+       return redirect()->route("admin.movies.index");
+
     }
 
     /**
@@ -38,7 +47,10 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //
+       
+           
+
+        return view("admin.movies.show", compact("movie"));
     }
 
     /**
@@ -46,7 +58,7 @@ class MovieController extends Controller
      */
     public function edit(Movie $movie)
     {
-        //
+        return view("admin.movies.edit", compact("movie"));
     }
 
     /**
@@ -54,7 +66,12 @@ class MovieController extends Controller
      */
     public function update(UpdateMovieRequest $request, Movie $movie)
     {
-        //
+
+        $validated_data = $request->validated();
+        $movie->update($validated_data);
+
+        return redirect()->route('admin.movies.show', $movie->id);
+        
     }
 
     /**
@@ -62,6 +79,8 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie)
     {
-        //
+        $movie->delete();
+
+        return redirect()->route('admin.movies.index');
     }
 }
